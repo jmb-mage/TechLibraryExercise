@@ -2,7 +2,13 @@
     <div class="home">
         <h1>{{ msg }}</h1>
 
-        <b-table striped hover :items="dataContext" :fields="fields" responsive="sm">
+        <b-pagination v-model="page"
+                      :total-rows="count"
+                      :per-page="perPage"
+                      aria-controls="books-table" align="center"></b-pagination>
+
+        <b-table striped hover id="books-table" :per-page="perPage"
+                 :current-page="page" :items="dataContext" :fields="fields" responsive="sm">
             <template v-slot:cell(thumbnailUrl)="data">
                 <b-img :src="data.value" thumbnail fluid></b-img>
             </template>
@@ -15,6 +21,7 @@
 
 <script>
     import axios from 'axios';
+    import settings from '@/settings'
 
     export default {
         name: 'Home',
@@ -29,15 +36,18 @@
                 { key: 'descr', label: 'Description', sortable: true, sortDirection: 'desc' }
 
             ],
-            items: []
+            items: [],
+            page: 1,
+            perPage: 10,
+            count: 1
         }),
-        
+
         methods: {
             dataContext(ctx, callback) {
-                axios.get("https://localhost:5001/books")
+                axios.get(`${settings.api.base}${settings.api.page}${this.page - 1}/${this.perPage}`)
                     .then(response => {
-                        
-                        callback(response.data);
+                        this.count = response.data.count;
+                        callback(response.data.books);
                     });
             }
         }

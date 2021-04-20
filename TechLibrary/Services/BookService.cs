@@ -13,6 +13,7 @@ namespace TechLibrary.Services
     {
         Task<List<Book>> GetBooksAsync();
         Task<Book> GetBookByIdAsync(int bookid);
+        Task<BooksPage> GetBooksPagination(int page, int rows = 10);
     }
 
     public class BookService : IBookService
@@ -34,6 +35,30 @@ namespace TechLibrary.Services
         public async Task<Book> GetBookByIdAsync(int bookid)
         {
             return await _dataContext.Books.SingleOrDefaultAsync(x => x.BookId == bookid);
+        }
+
+        /// <summary>
+        /// Get Books using pagination based on a current page and the maximum number of rows to return.
+        /// </summary>
+        /// <param name="page">int - 0 based</param>
+        /// <param name="rows">int - default to 10</param>
+        /// <returns></returns>
+        public async Task<BooksPage> GetBooksPagination(int page, int rows = 10)
+        {
+            var result = new BooksPage();
+
+            result.count = _dataContext
+                .Books
+                .Count();
+
+            result.books = await _dataContext
+                .Books
+                .AsQueryable()
+                .Skip(page * rows)
+                .Take(rows)
+                .ToListAsync();
+
+            return result;
         }
     }
 }
