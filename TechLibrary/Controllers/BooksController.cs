@@ -48,8 +48,8 @@ namespace TechLibrary.Controllers
             return Ok(bookResponse);
         }
 
-        [HttpGet("page/{page}/{rows}")]
-        public async Task<IActionResult> GetPage(int page, int rows)
+        [HttpGet("page/{page}/{rows}/{query?}")]
+        public async Task<IActionResult> GetPage(int page, int rows, string query = "")
         {
             // Controller methods like this should have standardized
             // try catch blocks with error handling
@@ -57,7 +57,10 @@ namespace TechLibrary.Controllers
 
             _logger.LogInformation($"Get book page {page} {rows}");
 
-            var books = await _bookService.GetBooksPagination(page, rows);
+            if (query.Length > 0)
+                query = System.Web.HttpUtility.HtmlDecode(query);
+
+            var books = await _bookService.GetBooksPagination(page, rows, query);
 
             var bookResponse = new {
                 books = _mapper.Map<List<BookResponse>>(books.books),

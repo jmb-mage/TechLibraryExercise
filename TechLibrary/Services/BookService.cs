@@ -13,7 +13,7 @@ namespace TechLibrary.Services
     {
         Task<List<Book>> GetBooksAsync();
         Task<Book> GetBookByIdAsync(int bookid);
-        Task<BooksPage> GetBooksPagination(int page, int rows = 10);
+        Task<BooksPage> GetBooksPagination(int page, int rows, string query);
     }
 
     public class BookService : IBookService
@@ -42,17 +42,25 @@ namespace TechLibrary.Services
         /// </summary>
         /// <param name="page">int - 0 based</param>
         /// <param name="rows">int - default to 10</param>
+        /// <param name="query">string - search querys</param>
         /// <returns></returns>
-        public async Task<BooksPage> GetBooksPagination(int page, int rows = 10)
+        public async Task<BooksPage> GetBooksPagination(int page, int rows = 10, string query = "")
         {
             var result = new BooksPage();
+            var books = from b in _dataContext.Books select b;
 
-            result.count = _dataContext
-                .Books
+            if (query.Length > 0)
+            {
+                query = query.ToLower();
+                books = books.Where(p =>
+                 p.Title.ToLower().Contains(query) || p.LongDescr.ToLower().Contains(query)
+             );
+            }
+
+            result.count = books
                 .Count();
 
-            result.books = await _dataContext
-                .Books
+            result.books = await books
                 .AsQueryable()
                 .Skip(page * rows)
                 .Take(rows)

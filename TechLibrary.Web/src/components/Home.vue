@@ -10,6 +10,12 @@
       align="center"
     ></b-pagination>
 
+    <b-form-input
+      v-model="query"
+      @keyup="onSearch"
+      placeholder="Search"
+    ></b-form-input>
+
     <b-table
       striped
       hover
@@ -24,9 +30,9 @@
         <b-img :src="data.value" thumbnail fluid></b-img>
       </template>
       <template v-slot:cell(title_link)="data">
-        <b-link :to="{ name: 'book_view', params: { id: data.item.bookId } }">{{
-          data.item.title
-        }}</b-link>
+        <b-link :to="{ name: 'book_view', params: { id: data.item.bookId } }">
+          {{ data.item.title }}
+        </b-link>
       </template>
     </b-table>
   </div>
@@ -62,6 +68,7 @@ export default {
     page: 1,
     perPage: 10,
     count: 1,
+    query: "",
   }),
 
   methods: {
@@ -70,12 +77,15 @@ export default {
         .get(
           `${settings.api.base}${settings.api.page}${this.page - 1}/${
             this.perPage
-          }`
+          }/${this.query}`
         )
         .then((response) => {
           this.count = response.data.count;
           callback(response.data.books);
         });
+    },
+    onSearch() {
+      this.$root.$emit("bv::refresh::table", "books-table");
     },
   },
 };
