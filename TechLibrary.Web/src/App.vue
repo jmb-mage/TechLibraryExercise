@@ -1,22 +1,15 @@
 <template>
-
-    <div id="app">
-        <b-container>
-            <router-view>
-            
-            </router-view>
-        </b-container>
-    </div>
-
+  <div id="app">
+    <b-container>
+      <router-view> </router-view>
+    </b-container>
+  </div>
 </template>
 
 <script>
-
-    export default {
-        name: 'app',
-    };
+export default {
+  name: "app",
+};
 </script>
 
-<style>
-</style>
-
+<style></style>
