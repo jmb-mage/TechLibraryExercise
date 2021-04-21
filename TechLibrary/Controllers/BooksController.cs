@@ -47,5 +47,56 @@ namespace TechLibrary.Controllers
 
             return Ok(bookResponse);
         }
+
+        [HttpGet("page/{page}/{rows}/{query?}")]
+        public async Task<IActionResult> GetPage(int page, int rows, string query = "")
+        {
+            // Controller methods like this should have standardized
+            // try catch blocks with error handling
+            // but since that is not in the exercise I will leave it out
+
+            _logger.LogInformation($"Get book page {page} {rows} {query}");
+
+            if (query.Length > 0)
+                query = System.Web.HttpUtility.HtmlDecode(query);
+
+            var books = await _bookService.GetBooksPagination(page, rows, query);
+
+            var bookResponse = new
+            {
+                books = _mapper.Map<List<BookResponse>>(books.books),
+                count = books.count
+            };
+
+            return Ok(bookResponse);
+        }
+
+        [HttpPost("edit")]
+        public async Task<IActionResult> EditBook(Book book)
+        {
+            _logger.LogInformation($"Edit book {book}");
+
+            if (!ModelState.IsValid || book.BookId == 0)
+            {
+                return BadRequest(book);
+            }
+            var updated = await _bookService.EditBook(book);
+
+            return Ok(updated);
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddBook(Book book)
+        {
+            _logger.LogInformation($"Add book {book}");
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(book);
+            }
+            var added = await _bookService.AddBook(book);
+
+            return Ok(added);
+        }
     }
 }

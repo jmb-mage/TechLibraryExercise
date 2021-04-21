@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TechLibrary.Domain
 {
@@ -12,5 +13,11 @@ namespace TechLibrary.Domain
         public string ThumbnailUrl { get; set; }
         public string ShortDescr { get; set; }
         public string LongDescr { get; set; }
+    }
+
+    public class BooksPage
+    {
+        public List<Book> books { get; set; }
+        public int count { get; set; }
     }
 }
