@@ -55,7 +55,7 @@ namespace TechLibrary.Controllers
             // try catch blocks with error handling
             // but since that is not in the exercise I will leave it out
 
-            _logger.LogInformation($"Get book page {page} {rows}");
+            _logger.LogInformation($"Get book page {page} {rows} {query}");
 
             if (query.Length > 0)
                 query = System.Web.HttpUtility.HtmlDecode(query);
@@ -74,6 +74,8 @@ namespace TechLibrary.Controllers
         [HttpPost("edit")]
         public async Task<IActionResult> EditBook(Book book)
         {
+            _logger.LogInformation($"Edit book {book}");
+
             if (!ModelState.IsValid || book.BookId == 0)
             {
                 return BadRequest(book);
@@ -86,6 +88,8 @@ namespace TechLibrary.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddBook(Book book)
         {
+            _logger.LogInformation($"Add book {book}");
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(book);
