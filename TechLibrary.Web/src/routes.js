@@ -7,6 +7,8 @@ const Home = () =>
   import(/* webpackChunkName: "Home" */ "./components/Home.vue");
 const Book = () =>
   import(/* webpackChunkName: "Book" */ "./components/Book.vue");
+const BookEdit = () =>
+  import(/* webpackChunkName: "BookEdit" */ "./components/BookEdit.vue");
 
 const router = new VueRouter({
   routes: [
@@ -15,6 +17,18 @@ const router = new VueRouter({
       name: "book_view",
       path: "/book/:id",
       component: Book,
+      props: true,
+    },
+    {
+      name: "book_edit",
+      path: "/book/edit/:id",
+      component: BookEdit,
+      props: true,
+    },
+    {
+      name: "book_add",
+      path: "/book/add",
+      component: BookEdit,
       props: true,
     },
   ],

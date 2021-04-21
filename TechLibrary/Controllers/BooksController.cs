@@ -62,12 +62,37 @@ namespace TechLibrary.Controllers
 
             var books = await _bookService.GetBooksPagination(page, rows, query);
 
-            var bookResponse = new {
+            var bookResponse = new
+            {
                 books = _mapper.Map<List<BookResponse>>(books.books),
                 count = books.count
             };
 
             return Ok(bookResponse);
+        }
+
+        [HttpPost("edit")]
+        public async Task<IActionResult> EditBook(Book book)
+        {
+            if (!ModelState.IsValid || book.BookId == 0)
+            {
+                return BadRequest(book);
+            }
+            var updated = await _bookService.EditBook(book);
+
+            return Ok(updated);
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddBook(Book book)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(book);
+            }
+            var added = await _bookService.AddBook(book);
+
+            return Ok(added);
         }
     }
 }

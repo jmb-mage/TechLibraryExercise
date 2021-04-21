@@ -13,13 +13,20 @@
         {{ book.descr }}
       </b-card-text>
 
-      <b-button to="/" variant="primary">Back</b-button>
+      <b-button-group>
+        <b-button
+          :to="{ name: 'book_edit', params: { id: book.bookId } }"
+          variant="primary"
+          >Edit</b-button
+        >
+      </b-button-group>
     </b-card>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import settings from "@/settings";
 
 export default {
   name: "Book",
@@ -28,9 +35,11 @@ export default {
     book: null,
   }),
   mounted() {
-    axios.get(`https://localhost:5001/books/${this.id}`).then((response) => {
-      this.book = response.data;
-    });
+    axios
+      .get(`${settings.api.base}${settings.api.books}${this.id}`)
+      .then((response) => {
+        this.book = response.data;
+      });
   },
 };
 </script>
