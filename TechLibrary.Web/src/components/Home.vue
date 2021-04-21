@@ -2,7 +2,7 @@
     <div class="home">
         <h1>{{ msg }}</h1>
 
-        <b-navbar toggleable="md" type="dark" variant="info">
+        <b-navbar toggleable="md" type="dark" variant="info" sticky>
             <b-navbar-nav>
                 <b-pagination v-model="page"
                               :total-rows="count"
